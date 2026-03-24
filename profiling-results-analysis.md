@@ -1,18 +1,18 @@
 ## **1. Dataset Overview**
 
-* **Number of rows:** 100,000
+* **Number of rows:** 364,545
 * **Number of columns:** 195
-* **Numeric columns:** 85
-* **Categorical columns:** 68
-* **Datetime columns:** 29
-* **Total missing cells:** 8,110,518 (~41.6%)
+* **Numeric columns:** 81
+* **Categorical columns:** 86
+* **Datetime columns:** 28
+* **Total missing cells:** 29,428,590 (~41.4%)
 * **Duplicate rows:** 0 (0%)
 
 **Observations:**
 
-* The dataset is **large and heterogeneous**, with many numeric, categorical, and datetime fields.
-* High missingness (~42%) is concentrated in operational and passenger flow metrics.
-* No duplicate rows, so every record is unique — good for model reliability.
+* The dataset is **large and heterogeneous**, spanning numeric, categorical, and datetime fields.
+* High missingness (~41%) is concentrated in operational, flight scheduling, and passenger flow metrics.
+* No duplicate rows, ensuring unique records — valuable for model reliability.
 
 ---
 
@@ -20,42 +20,42 @@
 
 Key columns with high missingness (>70%):
 
-| Column                                                                            | Missing % | Notes                                              |
-| --------------------------------------------------------------------------------- | --------- | -------------------------------------------------- |
-| `LTCtGLastCallDatetime`                                                           | 100%      | Cannot be used unless filled or imputed            |
-| `Invoicerevenue`, `InvoiceImputationDate`, `InvoiceDate`, `InvoiceNbOfTouchAndGo` | 100%      | Entirely missing; likely placeholder or incomplete |
-| `BusCauseModif`                                                                   | 98.3%     | Very sparse categorical data                       |
-| `BusRotationSchedule`, `BusRotationActual`                                        | 97%       | Sparse operational metrics                         |
-| `LTCancellationDatetime`                                                          | 96.5%     | Only a small fraction of rows have cancellations   |
-| Desk operations (`LTDeskOpenScheduledDatetime`, `LTDeskCloseScheduledDatetime`)   | 73–74%    | Most flights don’t have desk scheduling info       |
-| Passenger flow & PIF metrics                                                      | 87–89%    | Sparse PAX scanning metrics                        |
+| Column                                                                            | Missing % | Notes                                        |
+| --------------------------------------------------------------------------------- | --------- | -------------------------------------------- |
+| `LTCtGLastCallDatetime`                                                           | 100%      | Completely empty                             |
+| `InvoiceRevenue`, `InvoiceImputationDate`, `InvoiceDate`, `InvoiceNbOfTouchAndGo` | 100%      | Placeholder or incomplete invoice data       |
+| `BusCauseModif`                                                                   | 98.3%     | Sparse operational metric                    |
+| `BusRotationSchedule`, `BusRotationActual`                                        | 97%       | Sparse operational metrics                   |
+| `LTCancellationDatetime`                                                          | 96.4%     | Most flights not cancelled                   |
+| Desk operations (`LTDeskOpenScheduledDatetime`, `LTDeskCloseScheduledDatetime`)   | 73%       | Most flights don’t have desk scheduling info |
+| Passenger flow & PIF metrics (`PxAvg*`, `PxScans*`)                               | 87–89%    | Sparse scanning metrics                      |
 
 **Implications:**
 
-* Columns with >90% missing are **not useful for modeling** unless external imputation strategies exist.
-* Features with 70–90% missing can still be used cautiously with imputation or flag features (missingness itself can be informative).
+* Columns with >90% missing are **not useful for modeling** unless imputation is feasible.
+* Features with 70–90% missing can be used cautiously with imputation or as missingness indicators.
 
 ---
 
 ## **3. Outlier Analysis**
 
-Columns with extreme values or high outlier counts:
+Columns with extreme values or unusual entries:
 
-* **Passenger counts:** `InvoiceNbPaxConnecting` (13,854 outliers), `FarmsNbPaxPHMR` (13,518)
-* **Operational timings:** `TurnsBlockTimeMinutes` (large maximum), `DeskDurationMinutes` (negative values present)
-* **Delays:** `DelayHBLDurationMinutes` (6,895 outliers), `DelayMainReasonDuration` (2,730 outliers)
-* **PAX scanning:** `PxAvgTimeBetweenCheckingPIF`, `PxAvgTimeInTerminal` have negative and extremely high values
+* **Passenger counts:** `InvoiceNbPaxConnecting`, `FarmsNbPaxPHMR` have extreme high values.
+* **Operational timings:** `TurnsBlockTimeMinutes`, `DeskDurationMinutes` contain negative or extremely high values.
+* **Delays:** `DelayMainReasonDuration`, `DelayHBLDurationMinutes` exhibit extreme values.
+* **PAX scanning:** `PxAvgTimeBetweenCheckingPIF`, `PxAvgTimeInTerminal` include negative and extremely high values.
 
 **Implications:**
 
-* Numerical columns should be **cleaned or capped** before modeling.
-* Negative dwell or time intervals may indicate **data entry errors or missing data encoding**.
+* Numerical columns should be **cleaned, capped, or transformed**.
+* Negative dwell or interval times likely indicate **data entry errors or encoded missing values**.
 
 ---
 
 ## **4. Correlation Highlights**
 
-* Very strong correlations detected between operational and passenger metrics:
+High correlations detected between operational and passenger metrics:
 
 | Column 1                | Column 2                    | Correlation |
 | ----------------------- | --------------------------- | ----------- |
@@ -66,19 +66,19 @@ Columns with extreme values or high outlier counts:
 
 **Implications:**
 
-* High correlation columns can be **reduced to avoid multicollinearity**, e.g., via feature selection or PCA.
+* High correlation → consider **dimensionality reduction**, e.g., PCA or feature selection.
 
 ---
 
 ## **5. Datetime Coverage**
 
-* Data spans from **2020-03-20 → 2027-06-02** across different datetime types.
-* Flight and passenger events are mostly in **2023–2026**.
-* Some columns like `LTCtGLastCallDatetime` are completely empty.
+* Data spans **2020-03-20 → 2027-06-02** across multiple datetime types.
+* Flight and passenger events concentrated in **2023–2026**.
+* Some columns, like `LTCtGLastCallDatetime`, are completely empty.
 
 **Implications:**
 
-* Time-based features are rich but may require **UTC alignment, lag features, and careful handling of missing timestamps**.
+* Time-based features are rich but require **UTC alignment, lag features, and careful handling of missing timestamps**.
 
 ---
 
@@ -100,21 +100,21 @@ Columns with extreme values or high outlier counts:
 
 ## **7. Categorical Data Insights**
 
-* Sparse categorical variables (e.g., `BusCauseModif`, `ResponsableModifCtG`) have very high missing or few unique values.
+* Sparse categorical variables (e.g., `BusCauseModif`, `ResponsableModifCtG`) have high missing or very few unique values.
 * Frequent categories exist in `DelayMainReason` and `DelayMainReasonSubcode`.
 
 **Implications:**
 
 * Missingness itself can be a **predictive signal**.
-* For rare categories, consider **grouping under “Other”** or **frequency encoding**.
+* Rare categories → group under “Other” or apply **frequency encoding**.
 
 ---
 
 ## **8. Numeric Data Observations**
 
-* Passenger counts, block times, and dwell times have **extreme skew and outliers**.
-* PAX scanning intervals sometimes have **negative values**, likely needing **cleaning or capping**.
-* Some operational durations are **orders of magnitude higher than typical values** — likely data entry errors.
+* Passenger counts, block times, and dwell times exhibit **extreme skew and outliers**.
+* PAX scanning intervals sometimes have **negative values**, needing cleaning or capping.
+* Some operational durations are **orders of magnitude higher than typical values**, likely data entry errors.
 
 ---
 
@@ -123,25 +123,25 @@ Columns with extreme values or high outlier counts:
 1. **Data Cleaning**
 
    * Handle negative and extreme numeric values.
-   * Decide on strategy for >90% missing columns (drop or impute).
+   * Decide strategy for >90% missing columns (drop or impute).
 
 2. **Feature Engineering**
 
    * Encode high-cardinality categorical variables.
-   * Create derived features from timestamps (e.g., flight duration, day-of-week, peak/off-peak).
+   * Derive features from timestamps (flight duration, day-of-week, peak/off-peak).
    * Aggregate or reduce highly correlated columns.
 
 3. **Leakage Detection**
 
-   * Ensure target variables are **not directly derived from future information**.
+   * Ensure target variables are **not derived from future information**.
 
 4. **Outlier Handling**
 
-   * Winsorization or robust scaling for operational metrics and passenger counts.
+   * Apply winsorization or robust scaling for operational metrics and passenger counts.
 
 5. **Modeling Strategy**
 
    * Mixed data types → tree-based models (XGBoost, LightGBM) or neural networks with embeddings.
-   * Missing values → consider using missing indicator features.
+   * Missing values → consider missing indicator features.
 
 ---
