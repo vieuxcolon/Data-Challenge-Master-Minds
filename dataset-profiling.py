@@ -13,6 +13,7 @@ import pandas as pd
 import numpy as np
 from google.cloud import bigquery
 from IPython.display import display
+from google.colab import files
 
 
 # ============================================
@@ -278,3 +279,27 @@ flags_df = pd.DataFrame(flags)
 display(flags_df.head(50))
 
 
+# ============================================
+print("\n STEP 17: SAVE DATA AND PROFILING OUTPUTS LOCALLY")
+print("What: Persist raw sample and profiling tables to local CSV files")
+print("Why: Enables offline inspection, reproducibility, and download")
+print("How: Use pandas to_csv() method and provide download links in Colab\n")
+
+# Save the raw loaded sample
+df.to_csv("raw_dataset_sample.csv", index=False)
+print(" Raw dataset saved locally as raw_dataset_sample.csv")
+
+# Save summary tables
+summary_df.to_csv("column_summary.csv", index=False)
+dataset_summary_df.to_csv("dataset_summary.csv", index=False)
+flags_df.to_csv("feature_flags.csv", index=False)
+print(" Profiling outputs saved locally: column_summary.csv, dataset_summary.csv, feature_flags.csv")
+
+# Optional: Provide download links for convenience in Colab
+from google.colab import files
+print("\nDownloading files...")
+files.download("raw_dataset_sample.csv")
+files.download("column_summary.csv")
+files.download("dataset_summary.csv")
+files.download("feature_flags.csv")
+print(" Downloads initiated")
