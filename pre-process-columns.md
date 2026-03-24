@@ -22,7 +22,7 @@
 | 4                 | **Missing Value Imputation**        | Columns with missing values              | 78                | Numeric → median; Categorical → “UNKNOWN”; **no new missing-flag columns** |
 | 5                 | **Categorical Encoding**            | Categorical columns                      | 86                | In-place label encoding (no new columns)                                   |
 | 6                 | **Datetime Feature Transformation** | Datetime/date/time columns               | 28                | Year, month, day, weekday, hour, minute; numeric features added in-place   |
-| **Final Dataset** | —                                   | —                                        | **~195 columns**  | Compact, production-ready, fully engineered                                |
+| **Final Dataset** | —                                   | —                                        | **~171 columns**  | Compact, production-ready, fully engineered                                |
 
 > ⚡ **Note:** No new missing-flag columns are added, keeping the feature matrix compact while still handling missing values robustly.
 
@@ -77,7 +77,7 @@
 | Total columns before pre-processing             | 195                                    |
 | Total columns dropped                           | 12 + 9 + 3 = 24                        |
 | Total columns added via datetime transformation | 28 × ~5 numeric features = ~140?*      |
-| Total columns after pre-processing              | ~195 (compact, no missing flags added) |
+| Total columns after pre-processing              | ~171 (compact, no missing flags added) |
 | Numeric columns                                 | 81                                     |
 | Categorical columns                             | 86                                     |
 | Datetime-derived numeric columns                | 28                                     |
