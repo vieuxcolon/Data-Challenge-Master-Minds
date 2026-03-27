@@ -182,5 +182,13 @@ val_df.to_csv('/content/drive/MyDrive/val_preprocessed.csv', index=False)
 test_df.to_csv('/content/drive/MyDrive/test_preprocessed.csv', index=False)
 df_preprocessed.to_csv(PREPROCESSED_PATH, index=False)
 
+# -----------------------------
+# STEP 7: QUICK INSPECTION
+# -----------------------------
+print("\n Final Preprocessed Dataset Overview")
+print(f"Shape: {df_preprocessed.shape}")
+print("\nFirst 5 rows:")
+print(df_preprocessed.head())
+
 print(f" Preprocessing complete. Full dataset saved at: {PREPROCESSED_PATH}")
-print("✅ Pipeline finished successfully — all features included and modeling-ready")
+print(" Pipeline finished successfully — all features included and modeling-ready")
