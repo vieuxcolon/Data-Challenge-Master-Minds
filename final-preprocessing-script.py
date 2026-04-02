@@ -11,7 +11,7 @@ from pandas.tseries.holiday import USFederalHolidayCalendar  # adjust if needed
 PATH_RAW = "/content/drive/MyDrive/final_dataset_with_lags.csv"
 df = pd.read_csv(PATH_RAW, parse_dates=["UTCExternalDate"])
 df = df.sort_values("UTCExternalDate").reset_index(drop=True)
-print("✅ Loaded raw dataset:", df.shape)
+print(" Loaded raw dataset:", df.shape)
 
 # -----------------------------
 # 2. TIME FEATURES
