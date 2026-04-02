@@ -117,15 +117,15 @@ for col in numeric_cols:
 # -----------------------------
 PATH_PRE = "/content/drive/MyDrive/final_dataset_preprocessed_v6_semantic.csv"
 df.to_csv(PATH_PRE, index=False)
-print("💾 Preprocessed dataset saved:", PATH_PRE)
+print(" Preprocessed dataset saved:", PATH_PRE)
 
 # -----------------------------
 # 8. DISPLAY SHAPE & BASIC STATS
 # -----------------------------
-print("📦 Final shape:", df.shape)
-print("\nℹ️ Column info:")
+print(" Final shape:", df.shape)
+print("\n Column info:")
 print(df.info())
-print("\n📊 Numeric columns statistics:")
+print("\n Numeric columns statistics:")
 print(df[numeric_cols].describe().T)
 print("\n📝 Categorical columns unique values:")
 for col in cat_cols:
