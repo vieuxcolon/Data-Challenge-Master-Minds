@@ -127,7 +127,7 @@ print("\n Column info:")
 print(df.info())
 print("\n Numeric columns statistics:")
 print(df[numeric_cols].describe().T)
-print("\n📝 Categorical columns unique values:")
+print("\n Categorical columns unique values:")
 for col in cat_cols:
     if col in df.columns:
         print(f"{col}: {df[col].nunique()} unique values")
